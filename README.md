@@ -57,4 +57,4 @@ To get a forecast, use the forecast keyword:
 
 ### Screenshot
 
-![GoTravel Screenshot](https://github.com/jamesbuch/gotravel/gotravel-screenshot.png "GoTravel! Screenshot")
+![GoTravel Screenshot](/gotravel-screenshot.png "GoTravel! Screenshot")
