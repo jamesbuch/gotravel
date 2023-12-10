@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block nav_links %}
+<ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+	<li><a href="/" class="nav-link px-2 link-secondary">Home</a></li>
+	<li><a href="/chat" class="nav-link px-2">Chat</a></li>
+	<li><a href="/itinerary" class="nav-link px-2">Itineraries</a></li>
+	<li><a href="/about" class="nav-link px-2">About</a></li>
+</ul>
+{% endblock %}
+
+{% block header_buttons %}
+	{% if not logged_in %}
+		<button type="button" onclick="login()" class="btn btn-outline-primary me-2">Login</button>
+   	<button type="button" onclick="signup()" class="btn btn-primary">Sign-up</button>
+	{% else %}
+		<span>Welcome, {{ name }}</span>
+		<button type="button" onclick="logout()" style="margin-left: 5px" class="btn btn-outline-primary me-2">Logout</button>
+	{% endif %}
+{% endblock %}
+
+{% block content %}
+   
+	<h1>{% block title %} Welcome to Go Travel! {% endblock %}</h1>
+	
+	{% for message in get_flashed_messages() %}
+		<div class="alert alert-danger mb-3" role="alert">
+			{{ message }}
+	 	</div>	 
+	{% endfor %}
+
+	{% for itinerary in itineraries %}
+	<div class="container mt-5">
+		<form id="form" action="/forecast/place" method="POST">
+			<div class="row">
+				<div class="col-3 mt-1">
+					Choose a city to travel to in {{ itinerary['country'] }}:
+				</div>
+				<div class="col-3">
+					<select class="form-select" name="city">
+						{% for place in itinerary['places'] %}
+							<option value="{{ place }}, {{ itinerary['country'] }}">{{ place }}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div class="col-3">
+					<input class="btn btn-success" type="submit" value="Get Weather">
+				</div>
+		</div>
+	</form>
+	</div>
+	{% endfor %}
+
+	<div class="container mt-5" id="weatherData">
+	</div>
+
+	<div class="container mt-5" id="map">
+	</div>
+
+{% endblock %}

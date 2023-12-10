@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Go Travel!</title>
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  </head>
+  <body>
+    
+  <div class="container">
+
+    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+      <div class="col-md-3 mb-2 mb-md-0">
+        <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none">
+          <i class="bi-suitcase-lg-fill" style="font-size: 2rem; color: cornflowerblue;"></i>
+          <span class="fs-4" style="margin-left:5px; margin-top:5px">Go Travel!</span>
+        </a>
+      </div>
+
+      {% block nav_links %} {% endblock %}
+
+      <div class="col-md-3 text-end">
+        {% block header_buttons %} {% endblock %}
+      </div>
+    </header>
+
+  </div>
+  
+    <div id="app" class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+      <div class="container mt-5" id="weatherData">
+        {% block weather_data %}
+        {% endblock %}
+      </div>
+    
+      <div class="container mt-5" id="map">
+        {% block map_data %}
+        {% endblock %}
+      </div>
+
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/axios.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/vue.global.js') }}"></script>
+    <script>
+      function signup() {
+        window.location.href = "{{ url_for('register') }}"
+      }
+      function login() {
+        window.location.href = "{{ url_for('login') }}"
+      }
+      function logout() {
+        window.location.href = "{{ url_for('logout') }}"
+      }
+    </script>
+    <script>
+      async function getWeather() {
+        const mapsApiKey = 'AIzaSyBlSOucjKMhXIn_a84kYqlos-9kA9XuQyA'
+
+        // Clear the map data if present
+        let m1 = document.querySelector('#map')
+        m1.innerHTML = ''
+
+        let forms = document.querySelectorAll('#form')
+
+        // Set the spinner while we wait
+        let el = document.querySelector('#weatherData')
+        let spinner = '<div class="spinner-border text-success" role="status"><span class="visually-hidden">Loading...</span></div>'
+        el.innerHTML = spinner
+
+        for (let form of forms) {
+          
+          // Get requested location, lat lon values
+          let data = new FormData(form)
+          let info = data.get('city')
+          let parts = info.split('|')
+
+          // Call our /weather method
+          let response = await fetch('/weather', {
+              method: 'POST',
+              body: JSON.stringify({
+                city: parts[0],
+                lat: parts[1],
+                lon: parts[2]
+              }),
+              headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+              }
+          })
+
+          let json = await response.json()
+
+          // If we did not have a successful response, display an error message
+          if (json.cod != "200") {
+            let el = document.querySelector('#weatherData')
+            el.innerHTML = `<div class="mb-3"><p>Weather API returns bad response: ${json.cod}</p><p>Message: ${json.message}</p></div>`
+            return
+          }
+
+          // Get the elements we need from the JSON response and build the
+          // HTML on the page
+          let el = document.querySelector('#weatherData')
+          let weatherInfo = `<div class="mb-3"><h1>Weather for ${parts[0]}</h1>`
+          weatherInfo += `<p class="mt-1">Date/Time: ${json.list[0].dt_txt}<p>`
+          weatherInfo += `<p>Temperature: ${json.list[0].main.temp} &deg;C</p>`
+          weatherInfo += `<p>Feels Like: ${json.list[0].main.feels_like} &deg;C</p>`
+
+          let weather = json.list[0].weather[0]
+
+          let icon = ''
+          let sunny_regex = /[Ss]un/
+          let cloudy_regex = /[Cc]loud/
+          let rain_regex = /[Rr]ain/
+
+          // Set an icon that matches the weather description
+          if (sunny_regex.test(weather.main)) {
+            icon = '<i style="color: #f7e700; font-size: 24px" class="bi bi-sun"></i>'
+          }
+          else if (rain_regex.test(weather.main)) {
+            icon = '<i style="color: #0073f7; font-size: 24px" class="bi bi-cloud-rain"></i>'
+          }
+          else if (cloudy_regex.test(weather.main)) {
+            icon = '<i style="color: #888e94; font-size: 24px" class="bi bi-cloud"></i>'
+          }
+          else {
+            // default icon to use if we can't detect what the weather is
+            icon = '<i style="color: #f7e700; font-size: 24px" class="bi bi-cloud-sun"></i>'
+          }
+
+          weatherInfo += `<p>${icon} Weather: ${weather.main}</p>`
+          weatherInfo += `<div>`
+
+          el.innerHTML = weatherInfo
+          
+          // Set a map of the location
+          let m2 = document.querySelector('#map')
+          m2.innerHTML = `<iframe
+              width="600"
+              height="450"
+              style="border:0"
+              loading="lazy"
+              allowfullscreen
+              referrerpolicy="no-referrer-when-downgrade"
+              src="https://www.google.com/maps/embed/v1/place?key=${mapsApiKey}
+                &q=${parts[0]}, United Kingdom">
+            </iframe>`
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block nav_links %}
+<ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+	<li><a href="/" class="nav-link px-2 link-secondary">Home</a></li>
+	<li><a href="/chat" class="nav-link px-2">Chat</a></li>
+	<li><a href="/" class="nav-link px-2">Blogs</a></li>
+	<li><a href="/" class="nav-link px-2">Itineraries</a></li>
+	<li><a href="/" class="nav-link px-2">About</a></li>
+</ul>
+{% endblock %}
+
+{% block header_buttons %}
+	{% if not logged_in %}
+		<button type="button" onclick="login()" class="btn btn-outline-primary me-2">Login</button>
+   	<button type="button" onclick="signup()" class="btn btn-primary">Sign-up</button>
+	{% else %}
+		<span>Welcome, {{ name }}</span>
+		<button type="button" onclick="logout()" class="btn btn-outline-primary me-2">Logout</button>
+	{% endif %}
+{% endblock %}
+
+{% block content %}
+   
+	<h1>{% block title %} Itineraries {% endblock %}</h1>
+	
+	{% for message in get_flashed_messages() %}
+		<div class="alert alert-danger mt-3" role="alert">
+			{{ message }}
+	 	</div>
+	{% endfor %}
+
+	<div class="container-md mt-5">
+		<div class="mb-3">
+		</div>
+	</div>
+
+	{% if logged_in %}
+	<div class="container-md mt-5">
+	<form action="/" method="POST" class="row g-3">
+		<input type="hidden" name="userid" value="{{ userid }}">
+		<div class="col-12">
+			<label for="name" class="form-label">Itinerary Name</label>
+			<input type="text" class="form-control" name="name" id="name">
+		</div>
+		<div class="col-12">
+			<label for="place" class="form-label">Place</label>
+			<input type="text" class="form-control" name="place" id="place">
+		</div>
+		<div class="col-md-6">
+			<label for="lat" class="form-label">Latitude</label>
+			<input type="text" class="form-control" name="lat" id="lat">
+		 </div>
+		 <div class="col-md-6">
+			<label for="lon" class="form-label">Longitude</label>
+			<input type="text" class="form-control" name="lon" id="lon">
+		 </div>
+		<div class="col-12">
+			<button type="submit" class="btn btn-primary">Save</button>
+		</div>
+	 </form>
+	</div>
+	{% endif %}
+
+{% endblock %}

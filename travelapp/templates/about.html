@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block nav_links %}
+<ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+	<li><a href="/" class="nav-link px-2 link-secondary">Home</a></li>
+	<li><a href="/chat" class="nav-link px-2">Chat</a></li>
+	<li><a href="/itinerary" class="nav-link px-2">Itineraries</a></li>
+	<li><a href="/about" class="nav-link px-2">About</a></li>
+</ul>
+{% endblock %}
+
+{% block header_buttons %}
+	{% if not logged_in %}
+		<button type="button" onclick="login()" class="btn btn-outline-primary me-2">Login</button>
+   	<button type="button" onclick="signup()" class="btn btn-primary">Sign-up</button>
+	{% else %}
+		<span>Welcome, {{ name }}</span>
+		<button type="button" onclick="logout()" style="margin-left: 5px" class="btn btn-outline-primary me-2">Logout</button>
+	{% endif %}
+{% endblock %}
+
+{% block content %}
+   
+	<h1>{% block title %} About Go Travel! {% endblock %}</h1>
+	
+	<p>
+		Go Travel! is a Python Flask app written for assignment 2 of COS60016 <em>Programming for Development</em>.
+	</p>
+	<p>
+		You can find the source code on <a href="https://github.com/jamesbuch/gotravel">github</a>.
+	</p>
+
+{% endblock %}

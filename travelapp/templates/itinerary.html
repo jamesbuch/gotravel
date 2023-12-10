@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block nav_links %}
+<ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+	<li><a href="/" class="nav-link px-2 link-secondary">Home</a></li>
+	<li><a href="/chat" class="nav-link px-2">Chat</a></li>
+	<li><a href="/itinerary" class="nav-link px-2">Itineraries</a></li>
+	<li><a href="/about" class="nav-link px-2">About</a></li>
+</ul>
+{% endblock %}
+
+{% block header_buttons %}
+	{% if not logged_in %}
+		<button type="button" onclick="login()" class="btn btn-outline-primary me-2">Login</button>
+   	<button type="button" onclick="signup()" class="btn btn-primary">Sign-up</button>
+	{% else %}
+		<span>Welcome, {{ name }}</span>
+		<button type="button" onclick="logout()" class="btn btn-outline-primary me-2">Logout</button>
+	{% endif %}
+{% endblock %}
+
+{% block content %}
+   
+	<h1>{% block title %} New Itinerary {% endblock %}</h1>
+	
+	{% for message in get_flashed_messages() %}
+		<div class="alert alert-danger mt-3" role="alert">
+			{{ message }}
+	 	</div>
+	{% endfor %}
+	
+	{% if not logged_in %}
+	<div class="container-md mt-5">
+		<span class="f-3">Please log in first</span>
+	</div>
+	{% endif %}
+
+	{% if logged_in %}
+
+	<div class="container-md mt-5">
+		<span class="f-3 mb-1">Current Itineraries</span>
+		<form id="form" action="/forecast/itinerary" method="POST">
+			<input type="hidden" name="userid" id="userid" value="{{ userid }}">
+			<div class="row">
+				<div class="col-3 mt-1">
+					Select an itinerary to view weather forecast details
+				</div>
+				<div class="col-3">
+					<select class="form-select" name="itinerary">
+						{% for itinerary in itineraries %}
+							<option value="{{ itinerary['name'] }}">{{ itinerary['name'] }} ({{ itinerary['country'] }})</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div class="col-3">
+					<input class="btn btn-success" type="submit" value="Get Weather">
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<div class="container-md mt-5">
+	<form action="/itinerary" method="POST" class="row g-3">
+		<input type="hidden" name="userid" id="userid" value="{{ userid }}">
+		<div class="col-12">
+			<label for="name" class="form-label">Itinerary Name</label>
+			<input type="text" class="form-control" name="name" id="name">
+		</div>
+		<div class="col-12">
+			<label for="country" class="form-label">Country</label>
+			<input type="text" class="form-control" name="country" id="country">
+		</div>
+		<div class="col-12">
+			<label for="places" class="form-label">Itinerary Details (list of places)</label>
+		</div>
+		<div class="col-12">
+			<textarea class="form-control" name="places" id="places" placeholder="Itinerary details (one city/suburb per line, place state after comma if applicable)&#10;Examples: London&#10;Tamworth, NSW&#10;"></textarea>
+		</div>
+		<div class="col-12">
+			<button type="submit" class="btn btn-primary">Save</button>
+		</div>
+	 </form>
+	</div>
+	{% endif %}
+
+{% endblock %}

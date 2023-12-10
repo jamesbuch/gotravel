@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block nav_links %}
+<ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+	<li><a href="/" class="nav-link px-2 link-secondary">Home</a></li>
+	<li><a href="/chat" class="nav-link px-2">Chat</a></li>
+	<li><a href="/itinerary" class="nav-link px-2">Itineraries</a></li>
+	<li><a href="/about" class="nav-link px-2">About</a></li>
+</ul>
+{% endblock %}
+
+{% block header_buttons %}
+	{% if not logged_in %}
+		<button type="button" onclick="login()" class="btn btn-outline-primary me-2">Login</button>
+   	<button type="button" onclick="signup()" class="btn btn-primary">Sign-up</button>
+	{% else %}
+		<span>Welcome, {{ name }}</span>
+		<button type="button" class="btn btn-outline-primary me-2">Logout</button>
+	{% endif %}
+{% endblock %}
+
+{% block content %}
+   
+	<h1>{% block title %} Log In {% endblock %}</h1>
+	
+	{% for message in get_flashed_messages() %}
+		<div class="alert alert-danger mb-3" role="alert">
+			{{ message }}
+	 	</div>
+	{% endfor %}
+
+	<div class="container-md mt-5">
+		<form action="{{ url_for('login') }}" method="POST" class="row g-3">
+			<div class="col-md-6">
+			  <label for="email" class="form-label">Email address</label>
+			  <input type="email" class="form-control" name="email" id="email">
+			</div>
+			<div class="col-md-6">
+			  <label for="password" class="form-label">Password</label>
+			  <input type="password" class="form-control" name="password" id="password">
+			</div>
+			<div class="col-12">
+				<button type="submit" class="btn btn-primary">Log In</button>
+			</div>
+		 </form>
+	</div>
+
+{% endblock %}
