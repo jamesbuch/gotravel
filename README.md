@@ -29,8 +29,7 @@ Start the Flask app:
 
 ``flask --run``
 
-To really use the app, register an email and a password. Visit the register link, fill
-out the form, then click the Login link. If using the ready-made database, a user with
+If using the ready-made database, a user with
 email _james@example.com_ and password _example_ already exists. Note that if creating
 a new database, some fetching of weather data may cause an error because latitude and
 longitude coordinates must be specified for some locations. These coordinates for some
@@ -56,3 +55,6 @@ To get a forecast, use the forecast keyword:
 
 ``Get forecast for London, UK``
 
+### Screenshot
+
+![GoTravel Screenshot](https://github.com/jamesbuch/gotravel/gotravel-screenshot.png "GoTravel! Screenshot")
