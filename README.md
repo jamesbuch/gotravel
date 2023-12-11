@@ -17,6 +17,12 @@ Install packages from requirements:
 
 ``pip install -r requirements.txt``
 
+To use the app, create a .env file in the travelapp directory, and supply an API key
+for use with OpenWeatherMap, e.g.
+
+OPENWEATHER_API_KEY=c123ab407d888a60b0c392b12345be9a
+
+
 ### Note about initializing the database
 
 The database does not need to be initialized, but it can be re-created as an empty
