@@ -17,13 +17,21 @@ Install packages from requirements:
 
 ``pip install -r requirements.txt``
 
+### Note about initializing the database
+
+The database does not need to be initialized, but it can be re-created as an empty
+database.  The current database contains helpful latitude and longitude coordinates
+for some places on a pre-determined itinerary for the application.
+
 This repository contains an instance directory and a ready-made sqlite database. It can
 be overwritten by deleting the instance directory and running the command
 
 ``flask init-db``
 
+### Running the application
+
 The _.flaskenv_ file contains the app name, so it doesn't have to be specified on the
-command line to reinitialize the database or run the app (see below).
+command line to reinitialize the database or run the app.
 
 Start the Flask app:
 
